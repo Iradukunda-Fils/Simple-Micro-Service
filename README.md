@@ -1,246 +1,132 @@
-# 🌍 Simple Microservices System with Django & JWT
+🌍 Django Microservices System with JWT Authentication
+A scalable, modular microservices architecture built using Django REST Framework, supporting secure Authentication, Banking, and Payment operations. It features JWT authentication with RSA asymmetric encryption, seamless container orchestration using Docker Compose, and production-grade deployment with Gunicorn, Uvicorn, and Nginx.
 
-A scalable microservices-based system developed in **Django REST Framework**, designed to support **Authentication**, **Banking**, and **Payment Services** — secured using **JWT authentication** with **asymmetric encryption** (RSA). It uses **Docker Compose** for orchestration, **Nginx** for reverse proxying, and **Gunicorn** for production-grade deployment.
+🧩 Overview of Services
+Service	Description
+🔐 Auth	Issues & validates JWTs for secure access across services
+🏦 Bank	Manages user banking operations (accounts, balances)
+💳 Payment	Processes transactions and payment requests
+🌐 Gateway	Nginx reverse proxy + static/media file handler
 
----
+All services are containerized, isolated via Docker private networks, and securely interconnected.
 
-## 🔧 Services Overview
+🧱 System Architecture
+markdown
+Copy
+Edit
+                      ┌─────────────────────────────┐
+                      │        NGINX Gateway        │
+                      └────────────┬────────────────┘
+                                   │
+ ┌─────────────────────────────────┼──────────────────────────────────┐
+ │                                 │                                  │
+ │                            ┌────▼────┐                        ┌────▼─────┐
+ │                            │  Auth   │                        │  Bank     │
+ │                            └────┬────┘                        └────┬─────┘
+ │                                 │                                  │
+ │                            ┌────▼─────┐                       ┌────▼──────┐
+ │                            │ Payment  │                       │ PostgreSQL │
+ │                            └──────────┘                       └────────────┘
+ │
+ └──────────────────────────── Docker Private Network ───────────────────────────
+⚙️ Technology Stack
+🐍 Python 3.11+
 
-| Service          | Description                                   |
-|------------------|-----------------------------------------------|
-| 🔐 **Auth**       | Centralized user authentication using JWT     |
-| 🏦 **Bank**       | Manages banking operations                    |
-| 💳 **Payment**    | Handles payment processing                    |
-| 🌐 **Gateway**    | Nginx-based reverse proxy and static file handler |
+⚙️ Django 4+
 
-Each service is **Dockerized**, network-isolated, and communicates securely using internal Docker networking.
+🔐 Django REST Framework + SimpleJWT (RSA keys)
 
----
+🐳 Docker & Docker Compose
 
-## 🧱 Architecture Diagram
+🌐 Nginx – Reverse proxy & static/media handler
 
-            ┌─────────────────────────────┐
-            │        NGINX Gateway        │
-            └────────────┬────────────────┘
-                         │
- ┌──────────────────────┼─────────────────────────────┐
- │                      │                             │
-┌───▼────┐ ┌─────▼─────┐ ┌──────▼─────┐
-│ Auth │ │ Bank │ │ Payment │
-└───▲────┘ └─────▲─────┘ └──────▲─────┘
-│ │ │
-│ Central PostgreSQL Database │
-└────────────────────────┬─────────────────────────────┘
-│
+🐘 PostgreSQL – Shared database engine
 
+🚀 Gunicorn + Uvicorn workers – ASGI-compatible application server
 
----
+🔐 Authentication Flow (JWT with RSA)
+The Auth Service manages user login and token issuance using asymmetric encryption.
 
-Docker Private Network
+🔄 Endpoints
+POST /api/token/ — Get access & refresh tokens
 
-## ⚙️ Tech Stack
+POST /api/token/refresh/ — Refresh the access token
 
-- 🐍 **Python 3.11+**
-- 🧰 **Django 4+**
-- 🛡 **Django REST Framework**
-- 🔐 **SimpleJWT with RSA keys**
-- 🐳 **Docker & Docker Compose**
-- 🌐 **Nginx** as reverse proxy/static handler
-- 🐘 **PostgreSQL** for all services
-- 🚀 **Gunicorn** with **Uvicorn workers** for performance
+Headers:
 
----
-
-## 🔐 Authentication Flow
-
-The **Auth service** issues and verifies JWT tokens using **asymmetric RSA encryption**.
-
-- `/api/token/` → Get Access and Refresh tokens  
-- `/api/token/refresh/` → Refresh the Access token
-
-Add the JWT token in your headers:
-
-```http
+http
+Copy
+Edit
 Authorization: Bearer <your_token>
+✅ RSA encryption ensures the access token is signed using the private key and verified using the public key.
 
-Thank you for the clarification — since your **microservices architecture is built using Django (not FastAPI)**, let's rewrite your `README.md` accordingly.
+🚀 Getting Started
+📦 Prerequisites
+Docker
 
-Here's an **updated, clean, attractive, and Django-specific README** for your microservice system using **JWT with asymmetric encryption**, **Docker Compose**, **Gunicorn + Uvicorn**, and **Nginx reverse proxy**:
+Docker Compose
 
----
-
-```markdown
-# 🌍 Simple Microservices System with Django & JWT
-
-A scalable microservices-based system developed in **Django REST Framework**, designed to support **Authentication**, **Banking**, and **Payment Services** — secured using **JWT authentication** with **asymmetric encryption** (RSA). It uses **Docker Compose** for orchestration, **Nginx** for reverse proxying, and **Gunicorn** for production-grade deployment.
-
----
-
-## 🔧 Services Overview
-
-| Service          | Description                                   |
-|------------------|-----------------------------------------------|
-| 🔐 **Auth**       | Centralized user authentication using JWT     |
-| 🏦 **Bank**       | Manages banking operations                    |
-| 💳 **Payment**    | Handles payment processing                    |
-| 🌐 **Gateway**    | Nginx-based reverse proxy and static file handler |
-
-Each service is **Dockerized**, network-isolated, and communicates securely using internal Docker networking.
-
----
-
-## 🧱 Architecture Diagram
-
-```
-
-```
-            ┌─────────────────────────────┐
-            │        NGINX Gateway        │
-            └────────────┬────────────────┘
-                         │
- ┌──────────────────────┼─────────────────────────────┐
- │                      │                             │
-```
-
-┌───▼────┐           ┌─────▼─────┐                ┌──────▼─────┐
-│  Auth  │           │  Bank     │                │  Payment   │
-└───▲────┘           └─────▲─────┘                └──────▲─────┘
-│                        │                              │
-│           Central PostgreSQL Database                │
-└────────────────────────┬─────────────────────────────┘
-│
-Docker Private Network
-
-````
-
----
-
-## ⚙️ Tech Stack
-
-- 🐍 **Python 3.11+**
-- 🧰 **Django 4+**
-- 🛡 **Django REST Framework**
-- 🔐 **SimpleJWT with RSA keys**
-- 🐳 **Docker & Docker Compose**
-- 🌐 **Nginx** as reverse proxy/static handler
-- 🐘 **PostgreSQL** for all services
-- 🚀 **Gunicorn** with **Uvicorn workers** for performance
-
----
-
-## 🔐 Authentication Flow
-
-The **Auth service** issues and verifies JWT tokens using **asymmetric RSA encryption**.
-
-- `/api/token/` → Get Access and Refresh tokens  
-- `/api/token/refresh/` → Refresh the Access token
-
-Add the JWT token in your headers:
-
-```http
-Authorization: Bearer <your_token>
-````
-
----
-
-## 🚀 Running the Project
-
-### 📦 Prerequisites
-
-* Docker
-* Docker Compose
-
-### 🛠️ Setup & Run
-
-```bash
+🛠️ Setup
+bash
+Copy
+Edit
 git clone https://github.com/Iradukunda-Fils/Simple-Micro-Service.git
 cd Simple-Micro-Service
 docker-compose up --build
-```
+🌐 Service Endpoints
+Service	URL
+Auth	http://localhost/auth/
+Bank	http://localhost/bank/
+Payment	http://localhost/payment/
+Admin	http://localhost/admin/
 
-Once running:
+📁 Static & Media Files
+Managed via Django's collectstatic
 
-| Service            | URL                         |
-| ------------------ | --------------------------- |
-| Auth               | `http://localhost/auth/`    |
-| Bank               | `http://localhost/bank/`    |
-| Payment            | `http://localhost/payment/` |
-| Admin (if exposed) | `http://localhost/admin/`   |
+Served through Nginx from Docker-mounted volumes
 
----
-
-## 📁 Static & Media Files
-
-* Handled by **Nginx**
-* Collected via Django’s `collectstatic`
-* Served from mounted Docker volume paths
-
----
-
-## 🔐 JWT with RSA
-
-* Secure authentication with **private/public key pair**
-* Keys should be stored securely in `.env` or mounted volumes
-
-> ✅ Token decoding uses the **public key**, encoding uses the **private key**
-
----
-
-## 📂 Project Structure
-
-```
+📂 Project Structure
+bash
+Copy
+Edit
 Simple-Micro-Service/
-├── auth_service/
-├── bank_service/
-├── payment_service/
-├── nginx/
-├── shared_db/ (PostgreSQL)
-├── docker-compose.yml
-└── .env
-```
+├── auth_service/         # Authentication microservice
+├── bank_service/         # Banking microservice
+├── payment_service/      # Payment microservice
+├── nginx/                # Reverse proxy configuration
+├── shared_db/            # PostgreSQL container
+├── docker-compose.yml    # Multi-service orchestration
+└── .env                  # Environment variables
+✅ Key Features
+🔐 JWT Auth with RSA Encryption
 
----
+🔄 Refresh Token Support
 
-## ✅ Features
+🧱 Service-Based Separation of Concerns
 
-* 🔐 **Centralized Auth with JWT**
-* 🔄 **Refresh tokens**
-* 🧱 **Service-to-service separation**
-* 🐳 **Isolated services with Docker**
-* 🔧 **Gunicorn for production WSGI**
-* 🌐 **Nginx for static/media + gateway**
-* 🔒 **Private Docker networks**
-* 🧪 Easily testable & extendable structure
+🐳 Isolated Dockerized Microservices
 
----
+🔧 Production-Ready: Gunicorn + Uvicorn
 
-## 🛠️ Future Improvements
+🌐 Centralized Static & Media Handling via Nginx
 
-* 📊 Monitoring with Prometheus & Grafana
-* 📦 CI/CD with GitHub Actions
-* 🔎 Centralized Logging (ELK Stack)
-* 📘 Swagger/OpenAPI docs per service
-* 🧩 Service discovery (e.g., with Consul)
+🔒 Secure Internal Networking
 
----
+🛠️ Future Enhancements
+📊 Prometheus & Grafana for monitoring
 
-## 👤 Author
+⚙️ GitHub Actions CI/CD
 
+🧠 Service Discovery (e.g., using Consul)
+
+📘 Swagger/OpenAPI for per-service docs
+
+📦 Centralized Logging (e.g., ELK Stack)
+
+
+👤 Author
 **Iradukunda Fils**
 🔗 [GitHub Profile](https://github.com/Iradukunda-Fils)
 
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-```
-
----
-
-
-```
-
+📄 License
+Licensed under the MIT License — feel free to use, modify, and contribute.

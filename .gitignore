@@ -1,13 +1,21 @@
-# Python-generated files
+# ───── Python bytecode and build artifacts ─────
 __pycache__/
-*.py[oc]
+*.py[cod]
+*.egg-info/
 build/
 dist/
 wheels/
-*.egg-info
 
-# Virtual environments
-.venv
-**/.env/
-*.env
+# ───── Virtual environments ─────
+**/.venv/
+**/venv/
+
+# ───── Environment files (all levels) ─────
+.env
+.env
+**/.env
+**/*.env
+
+# ───── RSA or secret keys (recursively) ─────
+keys/
 **/keys/
