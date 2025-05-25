@@ -21,3 +21,6 @@ keys/
 **/keys
 *.venv
 *.pem
+
+**/main.env
+./Auth_Service/auth_service/keys
