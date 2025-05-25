@@ -1,0 +1,90 @@
+version: '3.9'
+services:
+  auth_service:
+    build:
+      context: ../Auth-Service
+      dockerfile: ../Auth-Service/auth_service/config/Dockerfile
+    container_name: auth_service
+    image: simple_microservice_auth
+    env_file:
+      - .env
+    volumes:
+      - auth-service_data:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - microservice_private_net
+    depends_on:
+      - db
+
+  bank_service:
+    build:
+      context: ../Bank-Service
+      dockerfile: ../Bank-Service/bank_service/config/Dockerfile
+    container_name: bank_service
+    image: simple_microservice_bank
+    env_file:
+      - .env
+    volumes:
+      - bank-service_data:/app
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - microservice_private_net
+    depends_on:
+      - db
+
+  db:
+    image: postgres:17
+    container_name: microservice_db
+    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    ports:
+      - "3232:${POSTGRES_PORT}"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-p", "${POSTGRES_PORT}"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - microservice_private_net
+
+  nginx:
+    build: ./nginx
+    container_name: microservice_nginx
+    image: simple_microservice_nginx
+    ports:
+      - "8080:8080"   # Auth Service via nginx
+      - "8081:8081"   # Bank Service via nginx
+    volumes:
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - auth_service
+      - bank_service
+    networks:
+      - microservice_private_net
+      - microservice_public_net
+
+
+volumes:
+  postgres_data:
+  auth-service_data:
+  bank-service_data:
+  nginx_logs:
+
+networks:
+  microservice_private_net:
+    driver: bridge
+  microservice_public_net:
+    driver: bridge

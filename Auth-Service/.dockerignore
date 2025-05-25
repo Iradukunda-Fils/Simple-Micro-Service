@@ -1,0 +1,58 @@
+# Ignore Dockerfiles and dockerignore itself
+Dockerfile*
+.dockerignore
+./auth_service/config/Dockerfile
+
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyc
+*.pyd
+
+# Django specific files and databases
+*.log
+*.pot
+*.sqlite3
+db.sqlite3
+staticfiles/
+
+# Virtual environment folders and Python version files
+venv/
+.venv/
+.python-version
+
+# IDE/editor directories and temp files
+.vscode/
+.idea/
+*.swp
+
+# Node/npm files (if frontend is present)
+node_modules/
+*.tsbuildinfo
+
+# OS metadata files
+.DS_Store
+Thumbs.db
+
+# Build artifacts and packaging
+build/
+dist/
+.eggs/
+*.egg-info/
+*.bak
+*.tmp
+
+# Testing outputs
+htmlcov/
+.tox/
+.coverage
+coverage.xml
+pytest_cache/
+__snapshots__/
+
+# Git directory (if you don't want to copy .git)
+.git
+
+# Remove staticfiles directory
+staticfiles

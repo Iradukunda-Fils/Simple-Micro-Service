@@ -1,0 +1,58 @@
+# Dockerfile
+./payment_service/config/Dockerfile
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Django specific
+*.log
+*.pot
+*.pyc
+*.pyd
+*.sqlite3
+db.sqlite3
+
+# Virtual environment
+venv/
+.venv/
+.python-version
+
+# IDE/editor directories
+.vscode/
+.idea/
+*.swp
+
+# Node/npm files (if frontend is co-located)
+node_modules/
+*.tsbuildinfo
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile*
+.dockerignore
+
+# Build artifacts
+build/
+dist/
+.eggs/
+*.egg-info/
+
+# Testing
+htmlcov/
+.tox/
+.coverage
+coverage.xml
+pytest_cache/
+__snapshots__/
+
+# Other configs
+*.bak
+*.tmp
+.git
+__pycache__
+*.pyc
