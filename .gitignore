@@ -18,4 +18,6 @@ wheels/
 
 # ───── RSA or secret keys (recursively) ─────
 keys/
-**/keys/
+**/keys
+*.venv
+*.pem
