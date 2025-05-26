@@ -1,19 +1,97 @@
-# ───── Python bytecode and build artifacts ─────
+# ---- Security ----
+*.pem
+*.key
+*.crt
+*.env
+secrets/
+credentials/
+
+# ---- Byte-compiled / Cache ----
 __pycache__/
 *.py[cod]
-*.egg-info/
+*$py.class
+
+# ---- Django Stuff ----
+*.log
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+*.pot
+*.pyc
+
+# ---- Environment ----
+.venv/
+venv/
+ENV/
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ---- IDEs ----
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# ---- OS Files ----
+.DS_Store
+Thumbs.db
+
+# ---- Docker ----
+*.pid
+docker-compose.override.yml
+
+# ---- Tests / Coverage ----
+.coverage
+htmlcov/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+.pytest_cache/
+
+# ---- Migrations ----
+*/migrations/__pycache__/
+*/migrations/*.pyc
+*/migrations/*.pyo
+*/migrations/*.orig
+
+# ---- Git ----
+*.orig
+
+# ---- VS Code Workspace Storage ----
+.vscode/settings.json
+.vscode/*.code-workspace
+
+# ---- PyInstaller ----
+*.spec
+
+# ---- MyPy ----
+.mypy_cache/
+
+# ---- Celery ----
+celerybeat-schedule
+celerybeat.pid
+
+# ---- Logs ----
+logs/
+*.log
+
+# ---- Node ----
+node_modules/
+npm-debug.log*
+
+# ---- Build ----
 build/
 dist/
-wheels/
+*.egg-info/
 
-# ───── Virtual environments ─────
-**/.venv/
-**/venv/
+# ---- JetBrains IDE ----
+*.iml
+.idea/
+out/
 
-# ───── Environment files (all levels) ─────
-*/main.env/
-
-# ───── RSA or secret keys (recursively) ─────
-*.pem
-./Auth-Service/auth_service/keys/
-./Bank-Service/bank_service/keys/
+# ---- Local Postgres or backup files ----
+*.dump
+*.bak
