@@ -13,14 +13,11 @@ wheels/
 # ───── Environment files (all levels) ─────
 **/.env
 .env
-**/.env
-**/*.env
+**/.env/
+**/*.env/
 
 # ───── RSA or secret keys (recursively) ─────
-keys/
 **/keys/
 **/.venv/
-*.pem
-**keys
-
+**/*.pem
 **/main.env/
