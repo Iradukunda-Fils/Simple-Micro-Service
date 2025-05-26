@@ -21,6 +21,6 @@ keys/
 **/keys/
 **/.venv/
 *.pem
-keys
+**keys
 
 **/main.env/
