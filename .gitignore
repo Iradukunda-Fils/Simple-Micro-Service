@@ -21,3 +21,5 @@ wheels/
 **/.venv/
 **/*.pem
 **/main.env/
+./Auth-Service/auth_service/keys/
+./Bank-Service/bank_service/keys/
