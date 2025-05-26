@@ -11,15 +11,9 @@ wheels/
 **/venv/
 
 # ───── Environment files (all levels) ─────
-**/.env
-.env
-**/.env/
-**/*.env/
+*/main.env/
 
 # ───── RSA or secret keys (recursively) ─────
-**/keys/
-**/.venv/
-**/*.pem
-**/main.env/
+*.pem
 ./Auth-Service/auth_service/keys/
 ./Bank-Service/bank_service/keys/
