@@ -28,7 +28,8 @@ RUN uv sync
 COPY ./auth_service .
 
 # Collect static files for production
-RUN uv run manage.py collectstatic --noinput 
+RUN uv run manage.py collectstatic --noinput && \
+    chmod -R 755 /app
 
 # ----------- RUNTIME STAGE -----------
 FROM python:3.13.3-slim-bookworm AS runtime

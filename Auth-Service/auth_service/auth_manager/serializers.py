@@ -1,23 +1,36 @@
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework_simplejwt.serializers import (
+    TokenObtainPairSerializer,
+    TokenRefreshSerializer,
+)
+
 
 class AuthTokenObtainPairSerializer(TokenObtainPairSerializer):
-    def validate(self, attrs):
-        data = super().validate(attrs)
+    @classmethod
+    def get_token(cls, user):
+        # Get the standard refresh token
+        token = super().get_token(user)
 
-        # Add custom claims
-        data['user_type'] = self.user.user_type if hasattr(self.user, 'user_type') else 'unknown'
-        data['email'] = self.user.email
-        data['username'] = self.user.username
+        # 🔧 Add custom claims
+        token["email"] = user.email
+        token["role"] = user.role if hasattr(user, "role") else "user"
 
-        return data
+        return token
+
 
 class AuthTokenRefreshSerializer(TokenRefreshSerializer):
     def validate(self, attrs):
-        data = super().validate(attrs)
+        super().validate(attrs)
+        # try:
+        #     refresh = RefreshToken(attrs['refresh'])
 
-        # Decode token to read data (optional)
-        from rest_framework_simplejwt.tokens import RefreshToken
-        refresh = RefreshToken(attrs['refresh'])
+        #     # 🔐 Optional: check a custom claim
+        #     if refresh.get('blocked', False):
+        #         raise serializers.ValidationError('This token is from a blocked user.')
 
-        data['username'] = str(refresh['username']) if 'username' in refresh else 'unknown'
-        return data
+        #     # Continue default validation
+        #     data = {'access': str(refresh.access_token)}
+
+        #     return data
+
+        # except TokenError as e:
+        #     raise serializers.ValidationError({'detail': 'Invalid or expired refresh token.'})

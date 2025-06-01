@@ -9,7 +9,8 @@ services:
     env_file:
       - .env
     volumes:
-      - auth-service_data:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -29,7 +30,8 @@ services:
     env_file:
       - .env
     volumes:
-      - bank-service_data:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
       interval: 30s
@@ -68,7 +70,9 @@ services:
       - "8080:8080"   # Auth Service via nginx
       - "8081:8081"   # Bank Service via nginx
     volumes:
-      - nginx_logs:/var/log/nginx
+      - ./nginx/logs:/var/log/nginx
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
     depends_on:
       - auth_service
       - bank_service
@@ -79,9 +83,9 @@ services:
 
 volumes:
   postgres_data:
-  auth-service_data:
-  bank-service_data:
   nginx_logs:
+  static_volume:
+  media_volume:
 
 networks:
   microservice_private_net:

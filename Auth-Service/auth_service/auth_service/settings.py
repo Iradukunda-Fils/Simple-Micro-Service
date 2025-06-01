@@ -15,17 +15,14 @@ import environ
 from datetime import timedelta
 
 
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-
+env = environ.Env(DEBUG=(bool, False))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Load environment variables from .env file
-environ.Env.read_env(env_file= BASE_DIR / 'config' / 'main.env')
+environ.Env.read_env(env_file=BASE_DIR / "config" / "main.env")
 
 
 # Quick-start development settings - unsuitable for production
@@ -40,68 +37,63 @@ ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[])
 # Application definition
 
 INSTALLED_APPS = [
-    # Auth and security 
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist',
+    # Auth and security
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     "auth_manager.apps.AuthManagerConfig",
-    'corsheaders',
-    
+    "corsheaders",
     # System apps
-    'users.apps.UsersConfig',
+    "users.apps.UsersConfig",
     "core.apps.CoreConfig",
     "api.apps.ApiConfig",
-
-    #django apps
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # django apps
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
 ]
 
 
 MIDDLEWARE = [
     # Allow request from defferent source
-    'corsheaders.middleware.CorsMiddleware',
-    
+    "corsheaders.middleware.CorsMiddleware",
     # Django Middlewares
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'auth_service.urls'
+ROOT_URLCONF = "auth_service.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'auth_service.wsgi.application'
+WSGI_APPLICATION = "auth_service.wsgi.application"
 
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': env.db()
-}
+DATABASES = {"default": env.db()}
 
 
 # Password validation
@@ -109,39 +101,36 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
 
-
-
-
-
 # CORS settings# --- CORS (Optional) ---
-CORS_ALLOW_ALL_ORIGINS = True  # Caution in production
+# CORS_ALLOW_ALL_ORIGINS = True  # Caution in production
+CORS_ALLOW_CREDENTIALS = True
 
 # --- Logging (Professional Setup) ---
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
         },
     },
-    'root': {
-        'handlers': ['console'],
-        'level': 'INFO',
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
     },
 }
 
@@ -149,9 +138,9 @@ LOGGING = {
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = "UTC"
 
 USE_I18N = True
 
@@ -161,68 +150,45 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = 'staticfiles'
+STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles/auth"
+
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "media/auth"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
+# =====================================> Authentication Configs <===============================================#
 
-#=====================================> Authentication Configs <===============================================#
 
+# Load keys from files
+with open(BASE_DIR / "keys" / "private.pem", "r") as f:
+    PRIVATE_KEY = f.read()
+
+with open(BASE_DIR / "keys" / "public.pem", "r") as f:
+    PUBLIC_KEY = f.read()
 
 # Rest Framework
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "auth_manager.auth.JWTAuth",  # Custom JWT Authentication
+        "rest_framework.authentication.SessionAuthentication",
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    )
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
 SIMPLE_JWT = {
     # 🔐 Cryptographic Setup
-    'ALGORITHM': 'RS256',
-    'SIGNING_KEY': load_private_key(),
-    'VERIFYING_KEY': load_public_key(),
-
+    "ALGORITHM": "RS256",
+    "SIGNING_KEY": PRIVATE_KEY,  # Use private key for signing
+    "VERIFYING_KEY": PUBLIC_KEY,  # Use public key for verification
     # 🕒 Token Lifetime Settings
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'ROTATE_REFRESH_TOKENS': True,  # Rotates the refresh token on use
-    'BLACKLIST_AFTER_ROTATION': True,  # Requires 'token_blacklist' app
-
-    # 🔖 Auth Header Settings
-    'AUTH_HEADER_TYPES': ('Bearer',),
-    'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',  # default
-    'USER_ID_FIELD': 'id',
-    'USER_ID_CLAIM': 'user_id',
-
-    # 🛠️ Token Classes
-    'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
-    'TOKEN_TYPE_CLAIM': 'token_type',
-
-    # 🧩 Custom Token Serializers (optional)
-    'TOKEN_OBTAIN_SERIALIZER': 'auth_manager.serializers.AuthTokenObtainPairSerializer',
-    'TOKEN_REFRESH_SERIALIZER': 'auth_manager.serializers.AuthTokenRefreshSerializer',
-
-    # 🛡️ Security (optional tweaks)
-    'JTI_CLAIM': 'jti',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=15),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "TOKEN_OBTAIN_SERIALIZER": "auth_manager.serializers.AuthTokenObtainPairSerializer",
+    "TOKEN_REFRESH_SERIALIZER": "auth_manager.serializers.AuthTokenRefreshSerializer",
 }
-
-
-# In auth_service/settings.py
-JWT_SETTINGS = {
-    'ALGORITHM': 'RS256',
-    'ISSUER': 'auth-service',
-    'AUDIENCE': ['bank-service', 'auth-service']
-}
-
-
