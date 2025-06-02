@@ -42,11 +42,15 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "auth_manager.apps.AuthManagerConfig",
-    "corsheaders",
-    # System apps
     "users.apps.UsersConfig",
     "core.apps.CoreConfig",
+    "corsheaders",
+    
+    # System apps
     "api.apps.ApiConfig",
+    'phonenumber_field',
+    'django_countries',
+    
     # django apps
     "django.contrib.admin",
     "django.contrib.auth",
@@ -164,6 +168,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # =====================================> Authentication Configs <===============================================#
 
+AUTH_USER_MODEL = "users.AuthUser"  # Custom User Model
 
 # Load keys from files
 with open(BASE_DIR / "keys" / "private.pem", "r") as f:

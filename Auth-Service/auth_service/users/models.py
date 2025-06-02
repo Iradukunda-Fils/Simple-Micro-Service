@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 import uuid
+from phonenumber_field.modelfields import PhoneNumberField
+from django_countries.fields import CountryField
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
@@ -24,12 +26,13 @@ class UserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-class User(AbstractBaseUser, PermissionsMixin):
+class AuthUser(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
     is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=False)
     date_joined = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'email'
@@ -41,9 +44,10 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(AuthUser, on_delete=models.CASCADE, related_name='profile')
     business_name = models.CharField(max_length=255, blank=True)
-    phone = models.CharField(max_length=20, blank=True)
+    country = CountryField(blank_label='(select country)', blank=True, null=True)
+    phone_number = PhoneNumberField(blank=True, null=True, region='RW')  # Optional region default like 'RW' for Rwanda
     address = models.CharField(max_length=255, blank=True)
     website = models.URLField(blank=True)
     bio = models.TextField(blank=True)
