@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import AuthUser, Profile
+from .models import User, Profile
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -8,7 +8,7 @@ class ProfileInline(admin.StackedInline):
     verbose_name_plural = 'Profile'
     fk_name = 'user'
 
-@admin.register(AuthUser)
+@admin.register(User)
 class UserAdmin(BaseUserAdmin):
     inlines = (ProfileInline,)
     list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active', 'date_joined')
@@ -27,12 +27,12 @@ class UserAdmin(BaseUserAdmin):
             'fields': ('email', 'password1', 'password2', 'is_active', 'is_staff', 'is_superuser')}
         ),
     )
-    filter_horizontal = ('groups', 'user_permissions',)
+    # filter_horizontal = ('groups', 'user_permissions',)
 
-    def get_inline_instances(self, request, obj=None):
-        if not obj:
-            return []
-        return super().get_inline_instances(request, obj)
+    # def get_inline_instances(self, request, obj=None):
+    #     if not obj:
+    #         return []
+    #     return super().get_inline_instances(request, obj)
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):

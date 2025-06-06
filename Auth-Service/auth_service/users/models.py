@@ -26,7 +26,7 @@ class UserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-class AuthUser(AbstractBaseUser, PermissionsMixin):
+class User(PermissionsMixin, AbstractBaseUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30, blank=True)
@@ -44,7 +44,7 @@ class AuthUser(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 class Profile(models.Model):
-    user = models.OneToOneField(AuthUser, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     business_name = models.CharField(max_length=255, blank=True)
     country = CountryField(blank_label='(select country)', blank=True, null=True)
     phone_number = PhoneNumberField(blank=True, null=True, region='RW')  # Optional region default like 'RW' for Rwanda

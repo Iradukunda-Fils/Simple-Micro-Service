@@ -1,17 +1,3 @@
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from django.shortcuts import render
 
-
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def current_user_view(request):
-    user = request.user
-    return Response(
-        {
-            "id": user.id,
-            "username": user.username,
-            "email": user.email,
-            "is_staff": user.is_staff,
-        }
-    )
+# Create your views here.

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "auth_manager.apps.AuthManagerConfig",
+    # "utils.apps.UtilsConfig",
     "users.apps.UsersConfig",
     "core.apps.CoreConfig",
     "corsheaders",
@@ -51,7 +52,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django_countries',
     
-    # django apps
+     # django apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -62,9 +63,7 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
-    # Allow request from defferent source
     "corsheaders.middleware.CorsMiddleware",
-    # Django Middlewares
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -79,7 +78,7 @@ ROOT_URLCONF = "auth_service.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -98,6 +97,7 @@ WSGI_APPLICATION = "auth_service.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {"default": env.db()}
+
 
 
 # Password validation
@@ -157,6 +157,13 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATIC_ROOT = BASE_DIR / "staticfiles/auth"
 
+# STATICFILES_DIRS = [BASE_DIR / "assets"]
+
+# Maximum upload size (in bytes)
+DATA_UPLOAD_MAX_MEMORY_SIZE = 52428800  # 50 MB
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760  # 10 MB (in-memory before streamed to disk)
+
+
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media/auth"
 
@@ -168,14 +175,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # =====================================> Authentication Configs <===============================================#
 
-AUTH_USER_MODEL = "users.AuthUser"  # Custom User Model
+AUTH_USER_MODEL = "users.User"  # Custom User Model
 
-# Load keys from files
-with open(BASE_DIR / "keys" / "private.pem", "r") as f:
-    PRIVATE_KEY = f.read()
 
-with open(BASE_DIR / "keys" / "public.pem", "r") as f:
-    PUBLIC_KEY = f.read()
+# Django Backends
+AUTHENTICATION_BACKENDS = [
+    'auth_manager.django_support.backends.JWTAuthenticationBackend',
+    'django.contrib.auth.backends.ModelBackend', 
+]
 
 # Rest Framework
 REST_FRAMEWORK = {
@@ -185,6 +192,15 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
+
+# Load keys from files
+with open(BASE_DIR / "keys" / "private.pem", "r") as f:
+    PRIVATE_KEY = f.read()
+
+with open(BASE_DIR / "keys" / "public.pem", "r") as f:
+    PUBLIC_KEY = f.read()
+
+
 
 SIMPLE_JWT = {
     # 🔐 Cryptographic Setup
