@@ -7,32 +7,42 @@ class ProfileInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Profile'
     fk_name = 'user'
+    extra = 0
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
     inlines = (ProfileInline,)
-    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active', 'date_joined')
+    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active', 'get_date_joined')
     list_filter = ('is_staff', 'is_active')
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
+    
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name')}),
+        ('Personal Info', {'fields': ('first_name', 'last_name', 'username')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Important dates', {'fields': ('date_joined',)}),
+        ('Important Dates', {'fields': ('last_login', 'last_password_change')}),
     )
+    
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'is_active', 'is_staff', 'is_superuser')}
+            'fields': (
+                'email', 'password1', 'password2', 'first_name', 'last_name', 'username',
+                'is_active', 'is_staff', 'is_superuser'
+            )}
         ),
     )
-    # filter_horizontal = ('groups', 'user_permissions',)
 
-    # def get_inline_instances(self, request, obj=None):
-    #     if not obj:
-    #         return []
-    #     return super().get_inline_instances(request, obj)
+    def get_date_joined(self, obj):
+        return obj.profile.date_joined if hasattr(obj, 'profile') else "-"
+    get_date_joined.short_description = 'Date Joined'
+    get_date_joined.admin_order_field = 'profile__date_joined'
+
+    def get_inline_instances(self, request, obj=None):
+        if not obj:
+            return []
+        return super().get_inline_instances(request, obj)
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):

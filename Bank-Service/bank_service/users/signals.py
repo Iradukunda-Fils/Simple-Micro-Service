@@ -1,7 +1,5 @@
-from django.contrib.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model
-from .models import Profile, BankUser
 from utils.helper import get_secure_unique_id
 
 User = get_user_model()

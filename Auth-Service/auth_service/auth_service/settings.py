@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import environ
 from datetime import timedelta
+from utils.helper import load_key
 
 
 env = environ.Env(DEBUG=(bool, False))
@@ -42,7 +43,10 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     "auth_manager.apps.AuthManagerConfig",
+    
     # "utils.apps.UtilsConfig",
+    
+    "utils.apps.UtilsConfig",
     "users.apps.UsersConfig",
     "core.apps.CoreConfig",
     "corsheaders",
@@ -63,7 +67,11 @@ INSTALLED_APPS = [
 
 
 MIDDLEWARE = [
+    # Custom Middleware
+    "auth_manager.auth.middleware.JWTAuthenticationMiddleware",  # Custom Auth Middleware
     "corsheaders.middleware.CorsMiddleware",
+    
+    # Django Middleware
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -175,32 +183,40 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # =====================================> Authentication Configs <===============================================#
 
+# Service Configurations
+
 AUTH_USER_MODEL = "users.User"  # Custom User Model
+AUTH_URL = env("AUTH_URL", default="http://localhost:8080/api/v1/auth/")
+
+LOGIN_URL = env("LOGIN_URL", default="http://localhost:8080/api/v1/auth/login/")
 
 
 # Django Backends
 AUTHENTICATION_BACKENDS = [
-    'auth_manager.django_support.backends.JWTAuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend', 
+    'auth_manager.auth.backends.JWTAuthenticationBackend',  # Custom JWT Authentication Backend
 ]
 
 # Rest Framework
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "auth_manager.auth.JWTAuth",  # Custom JWT Authentication
+        "auth_manager.auth.UserJWTAuthentication",  
         "rest_framework.authentication.SessionAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": (
+        "auth_manager.auth.permissions.IsAuthenticated",
+        ),
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
 
-# Load keys from files
-with open(BASE_DIR / "keys" / "private.pem", "r") as f:
-    PRIVATE_KEY = f.read()
 
-with open(BASE_DIR / "keys" / "public.pem", "r") as f:
-    PUBLIC_KEY = f.read()
+# Define key paths
+user_keys_path = BASE_DIR / "keys"
+service_keys_path = user_keys_path / "micro"
 
-
+# Load keys for users
+PRIVATE_KEY = load_key(user_keys_path / "private.pem")
+PUBLIC_KEY = load_key(user_keys_path / "public.pem")
 
 SIMPLE_JWT = {
     # 🔐 Cryptographic Setup
@@ -210,6 +226,10 @@ SIMPLE_JWT = {
     # 🕒 Token Lifetime Settings
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    "TOKEN_OBTAIN_SERIALIZER": "auth_manager.serializers.AuthTokenObtainPairSerializer",
-    "TOKEN_REFRESH_SERIALIZER": "auth_manager.serializers.AuthTokenRefreshSerializer",
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=5),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "TOKEN_OBTAIN_SERIALIZER": "auth_manager.auth.serializers.TokenObtainPairSerializer",
+    "SLIDING_TOKEN_OBTAIN_SERIALIZER": "auth_manager.auth.serializers.TokenObtainSlidingSerializer",
 }

@@ -1,5 +1,24 @@
 version: '3.9'
 services:
+  micro_manager:
+    build:
+      context: ../Micro-Manager
+      dockerfile: ../Micro-Manager/micro_service/config/Dockerfile
+    container_name: simple_micro_auth_service
+    image: simple_micro_auth
+    volumes:
+      - simple_micro_static_volume:/app/staticfiles
+      - simple_micro_media_volume:/app/media
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - simple_micro_private_net
+    depends_on:
+      - micro_db
+
   auth_service:
     build:
       context: ../Auth-Service
@@ -38,6 +57,26 @@ services:
     depends_on:
       - bank_db
 
+  micro_db:
+    image: postgres:17
+    container_name: simple_micro_auth_db
+    restart: on-failure
+    env_file:
+      - micro.env
+    volumes:
+      - simple_micro_postgres_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d
+    ports:
+      - "3221:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "CMD", "pg_isready", "-U", "micro_user", "-p", "5432"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - simple_micro_private_net
+
   auth_db:
     image: postgres:17
     container_name: simple_micro_auth_db
@@ -57,6 +96,7 @@ services:
       start_period: 30s
     networks:
       - simple_micro_private_net
+
   bank_db:
     image: postgres:17
     container_name: simple_micro_bank_db

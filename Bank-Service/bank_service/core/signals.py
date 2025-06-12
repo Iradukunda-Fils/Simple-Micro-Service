@@ -1,7 +1,6 @@
 from django.db.models.signals import pre_save  # Correct import for signals
 from django.dispatch import receiver
 from .models import Account
-from .models import CustomerProfile
 from utils.helper import get_secure_unique_id
 
 @receiver(pre_save, sender=Account, dispatch_uid="account_pre_save")
