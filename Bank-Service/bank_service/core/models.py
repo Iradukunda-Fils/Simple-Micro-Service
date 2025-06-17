@@ -96,7 +96,6 @@ class Bank(AuditableModel):
     insurance_amount = models.DecimalField(max_digits=15, decimal_places=2, default=250000.00)
     
     class Meta:
-        db_table = 'bank_banks'
         indexes = [
             models.Index(fields=['bank_code', 'swift_code']),
             models.Index(fields=['bank_type', 'is_active']),
@@ -127,7 +126,6 @@ class Branch(AuditableModel):
     atm_available = models.BooleanField(default=True)
     
     class Meta:
-        db_table = 'bank_branches'
         unique_together = ['bank', 'branch_code']
         indexes = [
             models.Index(fields=['bank', 'branch_code']),
@@ -220,7 +218,6 @@ class CustomerProfile(AuditableModel):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'bank_customer_profiles'
         indexes = [
             models.Index(fields=['customer_id', 'customer_type']),
             models.Index(fields=['kyc_status', 'risk_level']),
@@ -282,8 +279,6 @@ class AccountType(AuditableModel):
     compounds_interest = models.BooleanField(default=True)
     is_islamic_compliant = models.BooleanField(default=False)
     
-    class Meta:
-        db_table = 'bank_account_types'
     
     def __str__(self):
         return f"{self.name} ({self.code})"
@@ -344,7 +339,6 @@ class Account(AuditableModel):
     risk_score = models.PositiveIntegerField(default=0)
     
     class Meta:
-        db_table = 'bank_accounts'
         indexes = [
             models.Index(fields=['customer', 'account_type']),
             models.Index(fields=['account_number', 'status']),
@@ -442,7 +436,6 @@ class Transaction(AuditableModel):
     reversal_reason = models.TextField(blank=True)
     
     class Meta:
-        db_table = 'bank_transactions'
         indexes = [
             models.Index(fields=['transaction_id', 'status']),
             models.Index(fields=['account', 'created_at']),
@@ -568,7 +561,6 @@ class AuditLog(models.Model):
     error_message = models.TextField(blank=True)
     
     class Meta:
-        db_table = 'bank_audit_logs'
         indexes = [
             models.Index(fields=['timestamp', 'action_type']),
             models.Index(fields=['user_id', 'timestamp']),
@@ -637,7 +629,6 @@ class ComplianceAlert(AuditableModel):
     report_reference = models.CharField(max_length=100, blank=True)
     
     class Meta:
-        db_table = 'bank_compliance_alerts'
         indexes = [
             models.Index(fields=['alert_type', 'severity', 'status']),
             models.Index(fields=['customer', 'created_at']),

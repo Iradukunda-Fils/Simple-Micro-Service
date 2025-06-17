@@ -4,7 +4,7 @@ services:
     build:
       context: ../Micro-Manager
       dockerfile: ../Micro-Manager/micro_service/config/Dockerfile
-    container_name: simple_micro_auth_service
+    container_name: micro_manager_service
     image: simple_micro_auth
     volumes:
       - simple_micro_static_volume:/app/staticfiles
@@ -59,7 +59,7 @@ services:
 
   micro_db:
     image: postgres:17
-    container_name: simple_micro_auth_db
+    container_name: micro_auth_db
     restart: on-failure
     env_file:
       - micro.env
@@ -87,7 +87,7 @@ services:
       - simple_micro_postgres_data:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
     ports:
-      - "3221:5432"
+      - "3222:5432"
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "CMD", "pg_isready", "-U", "auth_user", "-p", "5432"]
       interval: 1m30s
@@ -107,7 +107,7 @@ services:
       - simple_micro_postgres_data:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
     ports:
-      - "3222:5432"
+      - "3223:5432"
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "bank_user", "-p", "5432"]
       interval: 1m30s

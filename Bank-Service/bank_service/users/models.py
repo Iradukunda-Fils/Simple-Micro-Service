@@ -27,7 +27,7 @@ class UserManager(BaseUserManager):
 
         return self.create_user(email, password, **extra_fields)
 
-class BankUser(PermissionsMixin, AbstractBaseUser):
+class User(PermissionsMixin, AbstractBaseUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(unique=True)
     phone_number = PhoneNumberField(blank=True, null=True, region='RW')
@@ -49,8 +49,9 @@ class BankUser(PermissionsMixin, AbstractBaseUser):
     def get_full_name(self):
         return f"{self.first_name} {self.last_name}".strip()
     
-    class meta:
-        verbose_name = 'users'
+    class Meta:
+        verbose_name = 'user'
+        verbose_name_plural = 'users'
         ordering = ['email', 'date_joined']
 
 
@@ -58,7 +59,7 @@ class EmployeeProfile(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     # Link to User
-    user = models.OneToOneField(BankUser, on_delete=models.CASCADE, related_name='employee_profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='employee_profile')
 
     # Employment Info
     employee_id = models.CharField(max_length=20, unique=True)
@@ -89,7 +90,6 @@ class EmployeeProfile(models.Model):
         return f"{self.user.get_full_name()} ({self.employee_id})"
 
     class Meta:
-        db_table = 'bank_employee_profiles'
         verbose_name = 'Employee Profile'
         verbose_name_plural = 'Employee Profiles'
     

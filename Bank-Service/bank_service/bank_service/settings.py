@@ -176,11 +176,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_SERVICE_URL = env("AUTH_SERVICE_URL", default="http://localhost:8000")
 
 # Custom user model
-AUTH_USER_MODEL = 'users.BankUser'
+AUTH_USER_MODEL = 'users.User'
 
 AUTHENTICATION_BACKENDS = [
         'django.contrib.auth.backends.ModelBackend', # This is the default that allows us to log in via username
-        'account.backends.EmailAuthBackend'
+        #'account.backends.EmailAuthBackend'
     ]
 
 # Rest Framework

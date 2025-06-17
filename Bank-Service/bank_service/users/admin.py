@@ -1,7 +1,7 @@
 from django.contrib import admin
-from .models import BankUser, EmployeeProfile
+from .models import User, EmployeeProfile
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-@admin.register(BankUser)
+@admin.register(User)
 class UserAdmin(BaseUserAdmin):
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
