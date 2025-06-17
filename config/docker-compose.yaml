@@ -122,8 +122,9 @@ services:
     container_name: simple_micro_nginx
     image: simple_micro_nginx
     ports:
-      - "8080:8080"   # Auth Service via nginx
-      - "8081:8081"   # Bank Service via nginx
+      - "8080:8080"   # Micro Manager Service via nginx
+      - "8081:8081"   # Auth Service via nginx
+      - "8082:8082"   # Bank Service via nginx
     volumes:
       - ./nginx/logs:/var/log/nginx
       - simple_micro_static_volume:/app/staticfiles
