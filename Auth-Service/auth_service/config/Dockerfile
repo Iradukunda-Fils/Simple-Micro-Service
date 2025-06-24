@@ -22,7 +22,7 @@ WORKDIR /app
 COPY ./pyproject.toml ./uv.lock ./
 
 # Install Python dependencies using uv
-RUN uv sync
+RUN uv sync 
 
 # Copy the application source code
 COPY ./auth_service .

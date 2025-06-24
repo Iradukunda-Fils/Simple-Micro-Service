@@ -15,6 +15,7 @@ services:
       timeout: 10s
       retries: 3
     networks:
+      - micro_manager_net
       - simple_micro_private_net
     depends_on:
       - micro_db
@@ -34,6 +35,7 @@ services:
       timeout: 10s
       retries: 3
     networks:
+      - micro_auth_net
       - simple_micro_private_net
     depends_on:
       - auth_db
@@ -53,58 +55,59 @@ services:
       timeout: 10s
       retries: 3
     networks:
+      - micro_bank_net
       - simple_micro_private_net
     depends_on:
       - bank_db
 
   micro_db:
-    image: postgres:17
-    container_name: micro_auth_db
+    image: postgres:16
+    container_name: simple_micro_db
     restart: on-failure
     env_file:
       - micro.env
     volumes:
-      - simple_micro_postgres_data:/var/lib/postgresql/data
-      - ./init:/docker-entrypoint-initdb.d
+      - simple_micro_microdb_data:/var/lib/postgresql/data
+      - ./init/micro:/docker-entrypoint-initdb.d
     ports:
       - "3221:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "CMD", "pg_isready", "-U", "micro_user", "-p", "5432"]
+      test: ["CMD", "pg_isready", "-U", "micro_user", "-p", "5432"]
       interval: 1m30s
       timeout: 10s
       retries: 5
       start_period: 30s
     networks:
-      - simple_micro_private_net
-
+      - micro_manager_net
+  
   auth_db:
-    image: postgres:17
+    image: postgres:16
     container_name: simple_micro_auth_db
     restart: on-failure
     env_file:
       - auth.env
     volumes:
-      - simple_micro_postgres_data:/var/lib/postgresql/data
+      - simple_micro_authdb_data:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
     ports:
       - "3222:5432"
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "CMD", "pg_isready", "-U", "auth_user", "-p", "5432"]
+      test: ["CMD", "pg_isready", "-U", "auth_user", "-p", "5432"]
       interval: 1m30s
       timeout: 10s
       retries: 5
       start_period: 30s
     networks:
-      - simple_micro_private_net
-
+      - micro_auth_net
+  
   bank_db:
-    image: postgres:17
+    image: postgres:16
     container_name: simple_micro_bank_db
     restart: on-failure
     env_file:
       - bank.env
     volumes:
-      - simple_micro_postgres_data:/var/lib/postgresql/data
+      - simple_micro_bankdb_data:/var/lib/postgresql/data
       - ./init:/docker-entrypoint-initdb.d
     ports:
       - "3223:5432"
@@ -115,7 +118,7 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - simple_micro_private_net
+      - micro_bank_net
 
   nginx:
     build: ./nginx
@@ -133,18 +136,28 @@ services:
       - auth_service
       - bank_service
     networks:
+      - micro_manager_net
+      - micro_auth_net
+      - micro_bank_net
       - simple_micro_private_net
       - simple_micro_public_net
 
-
 volumes:
   simple_micro_nginx_logs:
-  simple_micro_postgres_data:
+  simple_micro_microdb_data:
+  simple_micro_authdb_data:
+  simple_micro_bankdb_data:
   simple_micro_static_volume:
   simple_micro_media_volume:
 
 networks:
   simple_micro_private_net:
+    driver: bridge
+  micro_manager_net:
+    driver: bridge
+  micro_auth_net:
+    driver: bridge
+  micro_bank_net:
     driver: bridge
   simple_micro_public_net:
     driver: bridge

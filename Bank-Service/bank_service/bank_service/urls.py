@@ -20,7 +20,7 @@ from django.urls import path, include
 from django.http import HttpResponse, JsonResponse
 
 urlpatterns = [
-    path("", admin.site.urls),
+    path("admin/", admin.site.urls),
     path("api/", include("api.urls")),
     path("core/", include("core.urls")),
     path("hi/", lambda request: HttpResponse("<center><h1>Hello, World!</h1></center>")),
